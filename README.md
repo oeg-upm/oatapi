@@ -2,7 +2,7 @@
 
 OATAPIs takes a set of competency questions (CQs) and the related ontology and it generates the APIs which allows solving these questions.
 
-To run OATAPIs you need Python 3.7 (or a higher version). You can find the list of required packages [here](https://github.com/paoespinozarias/oatapi/requirements.txt).
+To run OATAPIs you need Python 3.7 (or a higher version). You can find the list of required packages [here](https://github.com/paoespinozarias/oatapis/blob/main/requirements.txt).
 
 Then, you should be able to run it as follows:
 
