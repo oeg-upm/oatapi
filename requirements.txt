@@ -1,0 +1,7 @@
+spacy
+lemminflect
+python3 -m spacy download en_core_web_sm
+networkx
+owlready2
+rouge
+pandas
