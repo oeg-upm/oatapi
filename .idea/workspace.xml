@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a4973038-bed4-42ae-a96f-e49f1808356f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Analysis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Corpus.xlsx" beforeDir="false" />
+<<<<<<< Updated upstream
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/query_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/CQs-VGO.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/CQs-VGO.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Onto/VideoGameOntology.owl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,40 +24,50 @@
     <session id="1135252693">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="12" />
           <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.10" value="2" />
+          <entry key="project.open.time.12" value="3" />
+          <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.19" value="1" />
+          <entry key="project.open.time.29" value="1" />
           <entry key="project.open.time.4" value="3" />
           <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.50" value="1" />
+          <entry key="project.open.time.55" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="9" />
+          <entry key="project.open.time.60" value="1" />
+          <entry key="project.open.time.61" value="1" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.open.time.8" value="2" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="23" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="16" />
+          <entry key="py" value="29" />
           <entry key="txt" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="7" />
-          <entry key="Python" value="16" />
+          <entry key="Python" value="29" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="58" />
-          <entry key="dummy" value="33" />
-          <entry key="py" value="6667" />
+          <entry key="dummy" value="34" />
+          <entry key="py" value="18318" />
           <entry key="txt" value="94" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="127" />
-          <entry key="Python" value="6725" />
+          <entry key="PLAIN_TEXT" value="128" />
+          <entry key="Python" value="18376" />
         </counts>
       </usages-collector>
     </session>
@@ -59,27 +75,55 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Analysis.py">
+<<<<<<< Updated upstream
+        <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="379" column="30" lean-forward="true" selection-start-line="379" selection-start-column="30" selection-end-line="379" selection-end-column="30" />
+            <state relative-caret-position="195">
+              <caret line="13" column="46" lean-forward="true" selection-start-line="13" selection-start-column="46" selection-end-line="13" selection-end-column="46" />
               <folding>
-                <element signature="e#0#12#0" expanded="true" />
-                <marker date="1621751183172" expanded="true" signature="136:137" ph="..." />
-                <marker date="1621751183172" expanded="true" signature="7793:8478" ph="..." />
-                <marker date="1621751183172" expanded="true" signature="17265:17287" ph="..." />
+                <element signature="e#0#23#0" expanded="true" />
+=======
+        <entry file="file://$PROJECT_DIR$/query_generator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="168">
+              <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+              <folding>
+                <marker date="1624133331285" expanded="true" signature="46:48" ph="..." />
+                <marker date="1624133331285" expanded="true" signature="71:79" ph="..." />
+                <marker date="1624133331285" expanded="true" signature="71:114" ph="..." />
+                <marker date="1624133331285" expanded="true" signature="71:119" ph="..." />
+                <marker date="1624133331285" expanded="true" signature="202:211" ph="..." />
+                <marker date="1624133331285" expanded="true" signature="957:3372" ph="..." />
+>>>>>>> Stashed changes
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main.py">
+        <entry file="file://$PROJECT_DIR$/Analysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+<<<<<<< Updated upstream
+            <state relative-caret-position="1494">
+              <caret line="253" column="32" lean-forward="true" selection-start-line="253" selection-start-column="32" selection-end-line="253" selection-end-column="32" />
+=======
+            <state relative-caret-position="240">
+              <caret line="16" column="25" lean-forward="true" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+>>>>>>> Stashed changes
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/analysis.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="184">
+              <caret line="576" column="12" selection-start-line="576" selection-start-column="12" selection-end-line="576" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -109,6 +153,20 @@
       <find>getLemmas</find>
       <find>searchOntologyElements</find>
       <find>formatResource</find>
+      <find>res</find>
+      <find>self.chunks</find>
+      <find>chunk</find>
+      <find>_id</find>
+      <find>query_type</find>
+      <find>nlp</find>
+      <find>query_</find>
+      <find>.TAG_</find>
+      <find>getontolo</find>
+      <find>label</find>
+      <find>-</find>
+      <find>resource_target</find>
+      <find>target_resource</find>
+      <find>cq_ana</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -128,15 +186,32 @@
         <option value="$PROJECT_DIR$/oatapi-v0.1.py" />
         <option value="$PROJECT_DIR$/Analysis0.1.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
+<<<<<<< Updated upstream
+=======
         <option value="$PROJECT_DIR$/Analysis.py" />
+        <option value="$PROJECT_DIR$/analysis_v1.py" />
+        <option value="$PROJECT_DIR$/analysis_v2.py" />
+        <option value="$PROJECT_DIR$/analysis_v3.py" />
+        <option value="$PROJECT_DIR$/query_generator_v1.py" />
+        <option value="$PROJECT_DIR$/query_generator.py" />
+        <option value="$PROJECT_DIR$/analysis-old.py" />
+        <option value="$PROJECT_DIR$/analysis.py" />
+>>>>>>> Stashed changes
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/Analysis.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1" />
+<<<<<<< Updated upstream
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-1613" />
     <option name="y" value="25" />
-    <option name="width" value="1600" />
+    <option name="width" value="1686" />
+=======
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="25" />
+    <option name="width" value="1680" />
+>>>>>>> Stashed changes
     <option name="height" value="970" />
   </component>
   <component name="ProjectView">
@@ -144,7 +219,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -156,6 +230,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -186,7 +261,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.oatapi-command-line-version2">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="analysis_v2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="oatapi" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analysis_v2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="oatapi" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -254,11 +350,13 @@
       <item itemvalue="Python.main" />
       <item itemvalue="Python.oatapi-command-line-version" />
       <item itemvalue="Python.oatapi-command-line-version2" />
+      <item itemvalue="Python.analysis_v2" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.oatapi-command-line-version2" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.analysis_v2" />
+        <item itemvalue="Python.oatapi-command-line-version2" />
         <item itemvalue="Python.oatapi-command-line-version" />
       </list>
     </recent_temporary>
@@ -286,20 +384,27 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1680" height="970" extended-state="6" />
+<<<<<<< Updated upstream
+    <frame x="-1613" y="25" width="1686" height="970" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1615431" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16876876" />
+=======
+    <frame x="0" y="25" width="1680" height="970" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16937914" />
+>>>>>>> Stashed changes
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32912844" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49921012" weight="0.4753946" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49921012" weight="0.4059633" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4380734" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32912844" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.49921012" visible="true" weight="0.40940368" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49921012" visible="true" weight="0.49426606" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5007899" side_tool="true" weight="0.4263323" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32912844" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -337,66 +442,137 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/oatapi-command-line-version.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="249" column="44" lean-forward="true" selection-start-line="249" selection-start-column="44" selection-end-line="249" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oatapi-command-line-version2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="38" column="33" selection-start-line="38" selection-start-column="25" selection-end-line="38" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Analysis0.1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="201" column="12" lean-forward="true" selection-start-line="201" selection-start-column="12" selection-end-line="201" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/oatapi-v0.2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2739">
-          <caret line="68" column="58" selection-start-line="68" selection-start-column="58" selection-end-line="68" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/oatapi-command-line-version.py" />
+    <entry file="file://$PROJECT_DIR$/oatapi-command-line-version2.py" />
+    <entry file="file://$PROJECT_DIR$/Analysis0.1.py" />
+    <entry file="file://$PROJECT_DIR$/oatapi-v0.2.py" />
     <entry file="file://$PROJECT_DIR$/requirements.txt">
+<<<<<<< Updated upstream
+=======
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="5" lean-forward="true" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Analysis.py">
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/owlready2/entity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="379" column="30" lean-forward="true" selection-start-line="379" selection-start-column="30" selection-end-line="379" selection-end-column="30" />
+        <state relative-caret-position="122">
+          <caret line="559" selection-start-line="559" selection-end-line="559" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis_v1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="448" lean-forward="true" selection-start-line="448" selection-end-line="448" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/owlready2/prop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="172" selection-start-line="172" selection-end-line="172" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis_v2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="446" lean-forward="true" selection-start-line="446" selection-end-line="446" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
-            <marker date="1621751183172" expanded="true" signature="136:137" ph="..." />
-            <marker date="1621751183172" expanded="true" signature="7793:8478" ph="..." />
-            <marker date="1621751183172" expanded="true" signature="17265:17287" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/query_generator_v1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydevd_bundle/pydevd_breakpoints.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="108" selection-start-line="108" selection-end-line="108" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="329" lean-forward="true" selection-start-line="329" selection-end-line="329" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/query_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+          <folding>
+            <marker date="1624133331285" expanded="true" signature="46:48" ph="..." />
+            <marker date="1624133331285" expanded="true" signature="71:79" ph="..." />
+            <marker date="1624133331285" expanded="true" signature="71:114" ph="..." />
+            <marker date="1624133331285" expanded="true" signature="71:119" ph="..." />
+            <marker date="1624133331285" expanded="true" signature="202:211" ph="..." />
+            <marker date="1624133331285" expanded="true" signature="957:3372" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis-old.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis_v3.py">
+>>>>>>> Stashed changes
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="472" lean-forward="true" selection-end-line="588" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+<<<<<<< Updated upstream
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+        <state relative-caret-position="195">
+          <caret line="13" column="46" lean-forward="true" selection-start-line="13" selection-start-column="46" selection-end-line="13" selection-end-column="46" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="576" column="12" selection-start-line="576" selection-start-column="12" selection-end-line="576" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+>>>>>>> Stashed changes
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
+        <state relative-caret-position="1494">
+          <caret line="253" column="32" lean-forward="true" selection-start-line="253" selection-start-column="32" selection-end-line="253" selection-end-column="32" />
+=======
+        <state relative-caret-position="240">
+          <caret line="16" column="25" lean-forward="true" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+>>>>>>> Stashed changes
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

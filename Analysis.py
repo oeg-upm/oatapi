@@ -5,6 +5,8 @@ import networkx as nx
 from rouge import Rouge
 import statistics
 
+import query_generator
+
 class Analysis:
 
     def __init__(self, corpus, ontology):
@@ -20,8 +22,9 @@ class Analysis:
         self.precision = []
         self.recall = []
 
-
         self.chunks =[]
+        self.query_generator=query_generator.QueryGenerator()
+
 
 
 
@@ -44,9 +47,9 @@ class Analysis:
 
         print(self.entities)
 
-        for chunk in doc.noun_chunks:
-            print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",
-                  chunk.root.head.text)
+       # for chunk in doc.noun_chunks:
+       #     print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",
+       #           chunk.root.head.text)
 
         self.chunks = doc.noun_chunks
 
@@ -152,7 +155,7 @@ class Analysis:
                               '{0}'.format(child.lemma_)))
         return nx.Graph(edges)
 
-
+    # Function to load the ontology into a directed graph that can store multiedges
     def loadOntologyAsGraph(self,onto):
         Gonto = nx.MultiDiGraph()
         onto_objectProperties = onto.object_properties()
@@ -201,19 +204,24 @@ class Analysis:
         return resource
 
 
-    def generateAPIPath(self):
+    # Function to generate the API paths according to the ontology elements detected in the CQs.
+    def generateAPIPath(self, target_resource):
         nodes_found = []
         resources = ""
         classes = []
+        relation=[]
+        relations = []
+        query_type=0
+       # doc_resource = self.nlp(target_resource)
 
         for ent in self.entities:
-            # First, check if entities found correspond with ontology class labels
+            # First, check if entities found correspond to ontology class labels
             classes_found = self.searchOntologyElements(owl_class, "label", ent.lemma_)
             for clas in classes_found:
                 if not clas in classes:
                     classes.append(clas)
 
-            # Second, check if entities correspond with ontology iris. This additional step is needed when classes do not have
+            # Second, check if entities correspond to ontology iris. This additional step is needed when classes do not have
             # labels, for example, when reusing ontology classes by reference.
             classes_found_with_iri = self.searchOntologyElements(owl_class, "iri", ent.lemma_)
             for clas in classes_found_with_iri:
@@ -226,20 +234,48 @@ class Analysis:
         object_properties = self.getObjectProperties(classes)
         print(object_properties)
 
-        for ent in self.entities:
-            for node in self.G.nodes():
-                if ent.lemma_ == self.getOntologyElementName(node).lower():
-                    nodes_found.append(node)
-        print(nodes_found)
+      #  for ent in self.entities:
+      #      for node in self.G.nodes():
+      #          if ent.lemma_ == self.getOntologyElementName(node).lower():
+      #              nodes_found.append(node)
+      #  print(nodes_found)
 
-       # for chunk in self.chunks:
-       #     print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",
-       #           chunk.root.head.text)
-       #     for clas in classes:
-       #         if re.search(str(chunk.root.text).lower(), self.getOntologyElementName(clas).lower()):
-       #             for node in nodes_found:
-       #                 if not self.getOntologyElementName(node).lower() == self.getOntologyElementName(clas).lower():
-       #                     nodes_found.append(clas)
+        start_char=-1
+        for chunk in self.doc.noun_chunks:
+           # print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",
+           #       chunk.root.head.text)
+            for clas in classes:
+
+                # As Spacy does not treat the beginning of some CQs as noun_chunks, we need to
+                # ensure that these cases can be analyzed.
+                if not chunk.start_char == 0 and not start_char == 0:
+                    cq_beginning = self.doc.char_span(0, chunk.start_char - 1)
+                    print(cq_beginning.text)
+                    start_char = 0
+                    if len(cq_beginning)>1:
+                        if cq_beginning[1].is_ancestor(cq_beginning[0]):
+                            resource_found = cq_beginning[1].lemma_
+                            if resource_found.lower() == self.getOntologyElementName(clas).lower():
+                                if not clas in nodes_found:
+                                    nodes_found.append(clas)
+
+                # When noun chunks have more than two words, they can correspond to a class whose name
+                # is composed of some words (e.g. local business)
+                if len(chunk) > 2:
+                    if re.search(str(chunk.root.lemma_).lower(), self.getOntologyElementName(clas).lower()):
+                        if not clas in nodes_found:
+                            if len(nodes_found)>0:
+                                for node in nodes_found:
+                                    if not re.sub(r"\s+", "", self.getOntologyElementName(node).lower()) ==  re.sub(r"\s+", "",self.getOntologyElementName(clas).lower()):
+                                        nodes_found.append(clas)
+                                        break
+                            else:
+                                nodes_found.append(clas)
+                elif chunk.root.lemma_.lower()==self.getOntologyElementName(clas).lower():
+                    if not clas in nodes_found:
+                        nodes_found.append(clas)
+
+
         try:
             if len(nodes_found) > 1:
                 print("The shortest paths between " + self.getOntologyElementName(
@@ -267,10 +303,18 @@ class Analysis:
                         print(self.getOntologyElementName(result[i]) + " --" + self.getOntologyElementName(
                             relation[data]['relation']) + "--> " + self.getOntologyElementName(result[i + 1]))
                     i += 1
+                    relations.append(relation[data]['relation'])
 
                 resources = resources + "/" + self.setPluralFormatResource(
                     result[0]) + "/{" + self.setSingularFormatResource(result[0]) + "-id}"
                 resources = resources + "/" + self.setPluralFormatResource(result[len(result) - 1])
+
+                nodes_found = result
+                relation = relations
+                query_type = 2
+
+                if target_resource[-3:] == "-id":
+                    target_resource = target_resource[0:-3]
 
             else:
                 if (len(object_properties)) > 0:
@@ -284,6 +328,7 @@ class Analysis:
                                             op):
                                         for rel in self.relations:
                                             if re.search(rel.lemma_, self.getOntologyElementName(op).lower()):
+                                                #    query_type = 2
                                                 if self.getOntologyElementName(node) in [self.getOntologyElementName(range) for
                                                                                     range in op.range]:
                                                     target = self.setPluralFormatResource(op)
@@ -295,20 +340,63 @@ class Analysis:
                                         for ent in self.entities:
                                             if not ent in self.relations:
                                                 if re.search(ent.lemma_, self.getOntologyElementName(op).lower()):
+                                                    query_type = 3
                                                     resources = resources + "/" + self.setPluralFormatResource(
                                                         node) + "/{" + self.setSingularFormatResource(node) + "-id}/" + self.setPluralFormatResource(key)
+                                                    relation = op
+
+                                                    if target_resource[-3:] == "-id":
+                                                        target_resource = target_resource[0:-3]
+
                                                     break
 
                 elif (len(data_properties)) > 0:
                     for dp in data_properties:
                         for clas in classes:
                             if clas in dp.domain:
-                                resources = resources + "/" + self.setPluralFormatResource(clas) + "/{" + self.setSingularFormatResource(clas) + "-id}"
+                                query_type = 1
+
+                                if target_resource[-3:]=="-id":
+                                    resources = resources + "/" + self.setPluralFormatResource(
+                                        clas) + "/{" + self.setSingularFormatResource(clas) + "-id}"
+                                else:
+                                    resources = resources + "/" + self.setPluralFormatResource(clas)
+
+
+                              #  for token in doc_resource.doc:
+                              #      if token.tag_=="NN":
+                              #          resources = resources + "/" + self.setPluralFormatResource(clas) + "/{" + self.setSingularFormatResource(clas) + "-id}"
+                              #          target_resource = target_resource +"-id"
+                              #          break
+                              #      elif token.tag_=="NNS":
+                              #          resources = resources + "/" + self.setPluralFormatResource(clas)
+                              #          break
+
+
+
                 else:
-                    resources = resources + "/" + self.setPluralFormatResource(nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
+                    query_type=1
+                    if target_resource[-3:] == "-id":
+                        resources = resources + "/" + self.setPluralFormatResource(
+                            nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
+                    else:
+                        resources = resources + "/" + self.setPluralFormatResource(
+                            nodes_found[0])
+                    #for token in doc_resource.doc:
+                    #    if token.tag_ == "NN":
+                    #        resources = resources + "/" + self.setPluralFormatResource(
+                    #            nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
+                    #        target_resource = target_resource + "-id"
+                    #        break
+                    #    elif token.tag_ == "NNS":
+                    #        resources = resources + "/" + self.setPluralFormatResource(
+                    #            nodes_found[0])
+                    #        break
+
 
         except:
             try:
+                #print("ERROR")
                 result = nx.bidirectional_shortest_path(self.G, nodes_found[0], nodes_found[1])
                 if len(result) > 0:
                     print("The ontology does not have a directed relation between " + str(
@@ -320,11 +408,12 @@ class Analysis:
                         nodes_found[1]) + "=" + self.setSingularFormatResource(nodes_found[1]) + "-id"
             except:
                 print("There is not a path between the nodes found")
-        return resources
+        return resources, nodes_found, relation, query_type, target_resource
 
-
+    # Function to calculate the precision, recall, and F1 measure of the API_path defined manually and those generated
+    # with OATAPI. To this end, this function applies the ROUGE method
     def rougeTest(self, apiPath, apiPathFromCorpus,lastElement):
-        # Retrieve the precision, recall, and F1 measure of the generated API_path according to the ROUGE method
+
         rouge = Rouge()
         if isinstance(apiPathFromCorpus, float):
             if apiPath == "":
@@ -357,9 +446,13 @@ class Analysis:
 
         return
 
+    # Function to analyze the CQs from the CSV.
+    # If the CSV has a column with API paths defined manually, this function allows applying the Rouge Method
+    # to get the precision, recall, and f_measure values
     def cq_analysis(self):
         i = 0
         results = []
+        queries =[]
         while i < len(self.corpus_df):
             cq_text = self.corpus_df.iloc[i, 0]
             print("\nCQ: " + cq_text)
@@ -367,7 +460,8 @@ class Analysis:
            # print("API Path from corpus: " + str(apiPathFromCorpus))
             self.doc = self.nlp(cq_text)
             self.entities, self.relations, self.dataProperties = self.entity_relation_identification(self.doc)
-            apiPath = self.generateAPIPath()
+            operation, target_resource = self.getOperations()
+            apiPath, ontology_elements, relation, query_type, target_resource = self.generateAPIPath(target_resource)
 
             if len(apiPath) > 0:
                 print("The suggested API path is: " + apiPath)
@@ -376,9 +470,120 @@ class Analysis:
 
             results.append(apiPath)
            # self.rougeTest(apiPath, apiPathFromCorpus, i)
+
+            query = self.query_generator.generateQuery(target_resource, ontology_elements, relation, query_type)
+            queries.append(query)
+
             i += 1
             self.entities = []
             self.relations = []
             self.dataProperties = []
+        return results, queries, self.onto.name
 
-        return results
+
+    # Function to search the target resource according to the ontology elements.
+    # First it checks if the parameter element corresponds with a class, if not it checks if the element corresponds with
+    # an object property, and finally it checks if it corresponds with a datatype property
+    def searchResourceElement(self, element):
+        class_found = []
+        op_found =[]
+        dp_found =[]
+        target_resource =""
+        class_found = self.searchOntologyElements(owl_class, "label", element)
+        if len(class_found) > 0:
+            #target_resource = element
+            target_resource=self.getOntologyElementName(class_found[0]).lower()
+            if len(target_resource.split()) > 1:  # if the name is composed by more than 1 word
+                target_resource = "-".join(target_resource.split())
+            return target_resource
+
+        op_found = self.searchOntologyElements(owl_object_property, "label", element)
+        if len(op_found) > 0:
+            if not op_found[0].domain[0] == op_found[0].range[0]:
+                target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
+                return target_resource
+            else: # When the object property relates the same class (e.g. Player--> isFriendWithPlayer --> Player)
+                #target_resource = element
+                target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
+                return target_resource
+        else:
+            op_found = self.searchOntologyElements(owl_object_property, "iri", element)
+            if len(op_found) > 0:
+                target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
+                return target_resource
+
+        dp_found = self.searchOntologyElements(owl_object_property, "label", element)
+        if len(dp_found) > 0:
+            target_resource = self.getOntologyElementName(dp_found[0].domain[0]).lower()
+            return target_resource
+        else:
+            dp_found = self.searchOntologyElements(owl_object_property, "iri", element)
+            if len(dp_found) > 0:
+                target_resource = self.getOntologyElementName(dp_found[0].domain[0]).lower()
+                return target_resource
+        return target_resource
+
+    # Function to detect the operation that should be executed in the API
+    def getOperations(self):
+            operationTerms = ["what", "who", "get", "list", "which", "where", "when", "obtain", "give"]
+            operation = ""
+            target_resource = ""
+
+            # for each chunk from the noun_chunks
+            for chunk in self.chunks:
+                print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",chunk.root.head.text)
+
+                # if question starts with an operation term denoting a GET operation
+                if str(chunk[0].text).lower() in operationTerms and chunk[0].i == 0:
+                    operation="GET"
+                    if chunk.root.pos_ == "NOUN":
+                        target_resource = self.searchResourceElement(chunk.root.lemma_)
+                        if not target_resource == "":
+                            # If chunk.root is a singular noun
+                            if chunk.root.tag_ == "NN":
+                                target_resource = target_resource+ "-id"
+                            # Else if chunk.root is a plural noun
+                          #  elif chunk.root.tag_ == "NNS":
+                           #     target_resource = chunk.root.text
+                            break
+
+                # else if the operation was already detected and the next chunk.root is a noun
+                # check if it corresponds to a class, object or datatype property. If the chunk.root corresponds
+                # to an ontology element retrieve the target_resource properly.
+
+                elif not operation=="" and chunk.root.pos_ == "NOUN":
+                    target_resource =self.searchResourceElement(chunk.root.lemma_)
+                    if not target_resource == "":
+                        if chunk.root.tag_ == "NN":
+                            target_resource = target_resource+ "-id"
+                       # elif chunk.root.tag_ == "NNS":
+                        #    target_resource = chunk.root.text
+                        break
+
+            # Sometimes Spacy does not treat the beginning of a CQ as a noun_chunk (e.g. What features does an item have?
+            # therefore, we fix this issue by adding an additional analysis by token. In this way, we are able to analyze the
+            # question and get the operation and the resource target that use to be an ancestor of the operation term token.
+
+            if operation=="":
+                for token in self.doc:
+                    # when question starts with an operation term that denotes a GET operation
+                    if token.text.lower() in operationTerms and token.i == 0:
+                        operation = "GET"
+                        if self.doc[1].is_ancestor(self.doc[0]):
+                            target_resource = self.searchResourceElement(self.doc[1].lemma_)
+                            break
+                        else:
+                            for chunk in self.doc.noun_chunks:
+                                if chunk.root.pos_ == "NOUN":
+                                    target_resource = self.searchResourceElement(chunk.root.lemma_)
+                                    if not target_resource == "":
+                                        if chunk.root.tag_=="NN":
+                                            target_resource= target_resource+ "-id"
+                                        #elif chunk.root.tag_=="NNS":
+                                            #target_resource = chunk.root.text
+                                        break
+                            break
+
+            print("Operation detected: " + operation)
+            print("Resource target: "+ target_resource)
+            return operation, target_resource
