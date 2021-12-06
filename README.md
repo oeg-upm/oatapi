@@ -38,7 +38,7 @@ python3 main.py -cq  "Data/CQs-VGO.csv" \
 Or, if you prefer to provide the parameter entries via their location on the Web, you can run OATAPI as follows:
 
 ```
-python3 main.py -cq  "https://raw.githubusercontent.com/paoespinozarias/oatapis/master/Data/CQs-VGO.csv" \
+python3 main.py -cq  "https://raw.githubusercontent.com/paoespinozarias/oatapi/master/Data/CQs-VGO.csv" \
 -o "http://vocab.linkeddata.es/vgo" \
 -r "Output/"
 ```
