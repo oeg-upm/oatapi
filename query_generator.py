@@ -1,5 +1,3 @@
-from owlready2 import *
-
 class QueryGenerator:
 
     def __init__(self):
@@ -9,13 +7,12 @@ class QueryGenerator:
 
 
     def generateQuery(self, target_resource, ontology_elements, relation, query_type):
-
-        #query = u"SELECT DISTINCT {} {}".format("?" + target_resource+ ", ?predicate, ?object", self.where(query_type, target_resource, ontology_elements, relation))
-      #  property_triples = " ?" + target_resource + " ?predicate ?object "
-
         select = "SELECT DISTINCT {} {}".format("?" + target_resource,
                                                 self.where(query_type, target_resource, ontology_elements, relation))
         query = u"CONSTRUCT { ?" + target_resource + " ?predicate ?object } WHERE { { " + select
+
+        if query_type==0:
+            query="not supported"
         return query
 
     # Function to configure the where clause
@@ -61,6 +58,15 @@ class QueryGenerator:
             ent = "?" + self.getOntologyElementName(ontology_elements[len(ontology_elements) - 1]) + "-id"
             rel=self.formatUri(relation)
             where = u"WHERE {{ {ent} {rel} {} }}".format("?" + target_resource, ent=ent, rel=rel)
+            where = where + property_triples
+
+        # When the path between the target_class and the source_class is in the opposite direction (there is an inverse relation)
+        # e.g. What are the public contracts that an organization manages? -> There is not a relation between Organization and Public Contract
+        # but there is the inverse relation Public Conctract -> managingDepartment -> Organization
+        elif query_type == 4:
+            ent = "?" + self.getOntologyElementName(ontology_elements[len(ontology_elements) - 1]) + "-id"
+            rel = self.formatUri(relation[0])
+            where = u"WHERE {{ {} {rel} {ent} }}".format("?" + target_resource, ent=ent, rel=rel)
             where = where + property_triples
 
         elif query_type==0:

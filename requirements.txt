@@ -5,3 +5,4 @@ networkx
 owlready2
 rouge
 pandas
+openpyxl

@@ -1,8 +1,0 @@
-﻿Identifier;CQ;API_path;Comments
-ca1;What are the details of the terrace that belongs to a local business?;/local-businesses/{local-business-id}/terraces;
-ca2;List the local businesses of a city.;/local-businesses;
-ca3;What are the details of a local business?;/local-businesses/{local-business-id};
-ca4;List the terraces of a city.;/terraces;
-ca5;What is the information of a terrace?;/terraces/{terrace-id};
-ca6;What are the shopping areas of a city?;/shopping-areas;
-ca7;What is the information of a shopping area?;/shopping-areas/{shopping-area-id};

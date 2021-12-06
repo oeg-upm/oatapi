@@ -2,9 +2,6 @@ import spacy
 import lemminflect
 from owlready2 import *
 import networkx as nx
-from rouge import Rouge
-import statistics
-
 import query_generator
 
 class Analysis:
@@ -17,16 +14,8 @@ class Analysis:
         self.relations = []
         self.dataProperties = []
         self.G = self.loadOntologyAsGraph(self.onto)
-
-        self.f_measure = []
-        self.precision = []
-        self.recall = []
-
         self.chunks =[]
         self.query_generator=query_generator.QueryGenerator()
-
-
-
 
     # Function to extract the candidate concepts and relationships from the CQ
     def entity_relation_identification(self,doc):
@@ -46,10 +35,6 @@ class Analysis:
                     self.entities.append(token)
 
         print(self.entities)
-
-       # for chunk in doc.noun_chunks:
-       #     print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",
-       #           chunk.root.head.text)
 
         self.chunks = doc.noun_chunks
 
@@ -86,6 +71,7 @@ class Analysis:
                         if dom in classes:
                             if not dp in data_properties:
                                 data_properties.append(dp)
+
         return data_properties
 
     # Function to search for data properties depending on the type of token found in the CQ.
@@ -149,10 +135,10 @@ class Analysis:
     def loadDependencyTree(self,doc):
         edges = []
         for token in doc:
-            # if  token.pos_ not in excluded_POS:
             for child in token.children:
                 edges.append(('{0}'.format(token.lemma_),
                               '{0}'.format(child.lemma_)))
+
         return nx.Graph(edges)
 
     # Function to load the ontology into a directed graph that can store multiedges
@@ -182,6 +168,7 @@ class Analysis:
                                 Gonto.add_edge(domain, r, relation=prop)
                         else:
                             Gonto.add_edge(domain, range, relation=prop)
+
         return Gonto
 
 
@@ -193,13 +180,21 @@ class Analysis:
 
         return resource
 
-    # Function that gets the resource name in its plural form.
+    # Function to get the resource name in its plural form.
     # It uses the lemminflect library to apply the inflect method for the corresponding token of the resource name
     def setPluralFormatResource(self, resName):
         doc1 = self.nlp(self.getOntologyElementName(resName).lower())
-        resource = doc1[len(doc1)-1]._.inflect('NNS')
+        resource =""
+        i=0
         if len(doc1) > 1:  # if the resource name is composed by more than 1 word
-            resource = str(doc1[0]) + "-"+resource
+            while i < len(doc1):
+                if i== len(doc1)-1:
+                    resource = resource + doc1[len(doc1) - 1]._.inflect('NNS')
+                else:
+                    resource = resource + str(doc1[i]) + "-"
+                i=i+1
+        else:
+            resource = doc1[len(doc1) - 1]._.inflect('NNS')
 
         return resource
 
@@ -212,7 +207,6 @@ class Analysis:
         relation=[]
         relations = []
         query_type=0
-       # doc_resource = self.nlp(target_resource)
 
         for ent in self.entities:
             # First, check if entities found correspond to ontology class labels
@@ -227,6 +221,7 @@ class Analysis:
             for clas in classes_found_with_iri:
                 if not clas in classes_found:
                     classes.append(clas)
+
         print("Clases:")
         print(classes)
         data_properties = self.getDataProperties(classes)
@@ -234,18 +229,12 @@ class Analysis:
         object_properties = self.getObjectProperties(classes)
         print(object_properties)
 
-      #  for ent in self.entities:
-      #      for node in self.G.nodes():
-      #          if ent.lemma_ == self.getOntologyElementName(node).lower():
-      #              nodes_found.append(node)
-      #  print(nodes_found)
 
         start_char=-1
         for chunk in self.doc.noun_chunks:
            # print(chunk.text, "ROOT:", chunk.root.text, "ROOT_POS:", chunk.root.dep_, "HEAD:",
            #       chunk.root.head.text)
             for clas in classes:
-
                 # As Spacy does not treat the beginning of some CQs as noun_chunks, we need to
                 # ensure that these cases can be analyzed.
                 if not chunk.start_char == 0 and not start_char == 0:
@@ -277,11 +266,13 @@ class Analysis:
 
 
         try:
+            skosResource=False
             if len(nodes_found) > 1:
                 print("The shortest paths between " + self.getOntologyElementName(
                     nodes_found[1]) + " and " + self.getOntologyElementName(
                     nodes_found[0]) + " are:")
                 all_paths = nx.all_simple_paths(self.G, nodes_found[1], nodes_found[0])
+
                 for path in sorted(all_paths, key=len):
                     j = 0
                     result = nx.bidirectional_shortest_path(self.G, nodes_found[1], nodes_found[0])
@@ -321,6 +312,9 @@ class Analysis:
                     for node in nodes_found:
                         neighbours = self.G[node]
                         for key in neighbours:
+                            if skosResource==True and str(key).__contains__("core.inScheme.value"):
+                                print (key)
+                                break
                             for op in object_properties:
                                 edge_data = self.G.get_edge_data(node, key, key=None)
                                 for data in edge_data:
@@ -333,7 +327,7 @@ class Analysis:
                                                                                     range in op.range]:
                                                     target = self.setPluralFormatResource(op)
                                                 else:
-                                                    target  = self.setPluralFormatResource(key)
+                                                    target = self.setPluralFormatResource(key)
                                                 resources = resources + "/" + self.setPluralFormatResource(
                                                     node) + "/{" + self.setSingularFormatResource(node) + "-id}/" + target
                                                 break
@@ -344,18 +338,31 @@ class Analysis:
                                                     resources = resources + "/" + self.setPluralFormatResource(
                                                         node) + "/{" + self.setSingularFormatResource(node) + "-id}/" + self.setPluralFormatResource(key)
                                                     relation = op
+                                                    if (self.setPluralFormatResource(key)=="concepts"):
+                                                        skosResource=True
 
                                                     if target_resource[-3:] == "-id":
                                                         target_resource = target_resource[0:-3]
 
                                                     break
 
+                    # Sometimes an object property is detected, but it is not part of the target solution. In this case,
+                    # the algorithm will not be able to generate a resource. However, as the only target class (node)
+                    # has been detected we can suggest an API path based on this class.
+                    if resources == "":
+                        query_type = 1
+                        if target_resource[-3:] == "-id":
+                            resources = resources + "/" + self.setPluralFormatResource(
+                                nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
+                        else:
+                            resources = resources + "/" + self.setPluralFormatResource(
+                                nodes_found[0])
+
                 elif (len(data_properties)) > 0:
                     for dp in data_properties:
                         for clas in classes:
                             if clas in dp.domain:
                                 query_type = 1
-
                                 if target_resource[-3:]=="-id":
                                     resources = resources + "/" + self.setPluralFormatResource(
                                         clas) + "/{" + self.setSingularFormatResource(clas) + "-id}"
@@ -363,88 +370,51 @@ class Analysis:
                                     resources = resources + "/" + self.setPluralFormatResource(clas)
 
 
-                              #  for token in doc_resource.doc:
-                              #      if token.tag_=="NN":
-                              #          resources = resources + "/" + self.setPluralFormatResource(clas) + "/{" + self.setSingularFormatResource(clas) + "-id}"
-                              #          target_resource = target_resource +"-id"
-                              #          break
-                              #      elif token.tag_=="NNS":
-                              #          resources = resources + "/" + self.setPluralFormatResource(clas)
-                              #          break
-
-
-
                 else:
                     query_type=1
-                    if target_resource[-3:] == "-id":
-                        resources = resources + "/" + self.setPluralFormatResource(
-                            nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
+                    if len(nodes_found)>0:
+                        if target_resource[-3:] == "-id":
+                            resources = resources + "/" + self.setPluralFormatResource(
+                                nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
+                        else:
+                            resources = resources + "/" + self.setPluralFormatResource(
+                                nodes_found[0])
                     else:
-                        resources = resources + "/" + self.setPluralFormatResource(
-                            nodes_found[0])
-                    #for token in doc_resource.doc:
-                    #    if token.tag_ == "NN":
-                    #        resources = resources + "/" + self.setPluralFormatResource(
-                    #            nodes_found[0]) + "/{" + self.setSingularFormatResource(nodes_found[0]) + "-id}"
-                    #        target_resource = target_resource + "-id"
-                    #        break
-                    #    elif token.tag_ == "NNS":
-                    #        resources = resources + "/" + self.setPluralFormatResource(
-                    #            nodes_found[0])
-                    #        break
+                        print("Nodes not found")
+                        resources = "not supported"
+                        query_type = 0
 
 
         except:
             try:
-                #print("ERROR")
-                result = nx.bidirectional_shortest_path(self.G, nodes_found[0], nodes_found[1])
+                result = nx.bidirectional_shortest_path(self.G, nodes_found[0], nodes_found[len(nodes_found) - 1])
                 if len(result) > 0:
                     print("The ontology does not have a directed relation between " + str(
-                        self.getOntologyElementName(result[0])) + " and " + str(
-                        self.getOntologyElementName(nodes_found[1])) + " classes.")
-                    print("However, OATAPIs suggest you an alternative path")
-                    resources = resources + "/" + self.setPluralFormatResource(
-                        result[0]) + "/{" + self.setSingularFormatResource(result[0]) + "-id}?" + self.setSingularFormatResource(
-                        nodes_found[1]) + "=" + self.setSingularFormatResource(nodes_found[1]) + "-id"
+                    self.getOntologyElementName(result[0])) + " and " + str(
+                    self.getOntologyElementName(nodes_found[len(nodes_found) - 1])) + " classes.")
+                    print("However, OATAPI suggest you an alternative path")
+                i=0
+                while i < len(result) - 1:
+                    relation = self.G.get_edge_data(result[i], result[i + 1], key=None)
+                    for data in relation:
+                        print(self.getOntologyElementName(result[i]) + " --" + self.getOntologyElementName(
+                            relation[data]['relation']) + "--> " + self.getOntologyElementName(result[i + 1]))
+                    i += 1
+                    relations.append(relation[data]['relation'])
+
+                resources = resources + "/" + self.setPluralFormatResource(
+                    result[len(result) - 1]) + "/{" + self.setSingularFormatResource(result[len(result) - 1]) + "-id}"
+                resources = resources + "/" + self.setPluralFormatResource(result[0])
+
+                nodes_found = result
+                relation = relations
+                query_type = 4
             except:
                 print("There is not a path between the nodes found")
+                resources="not supported"
+                query_type = 0
         return resources, nodes_found, relation, query_type, target_resource
 
-    # Function to calculate the precision, recall, and F1 measure of the API_path defined manually and those generated
-    # with OATAPI. To this end, this function applies the ROUGE method
-    def rougeTest(self, apiPath, apiPathFromCorpus,lastElement):
-
-        rouge = Rouge()
-        if isinstance(apiPathFromCorpus, float):
-            if apiPath == "":
-                scores = rouge.get_scores("not generated", "undefined")
-            else:
-                scores = rouge.get_scores(apiPath, "undefined")
-        else:
-            if apiPath == "":
-                scores = rouge.get_scores("not generated", apiPathFromCorpus)
-            else:
-                scores = rouge.get_scores(apiPath, apiPathFromCorpus)
-        rouge_values = scores[0]['rouge-1']
-        print("ROUGE score of the predicted API: " + str(rouge_values))
-        for key in rouge_values:
-            if key == "f":
-                self.f_measure.append(rouge_values[key])
-            elif key == "p":
-                self.precision.append(rouge_values[key])
-            elif key == "r":
-                self.recall.append(rouge_values[key])
-
-        if lastElement ==  len(self.corpus_df)-1:
-            print("\nThe mean of the Rouge values is:")
-            print("Total precision: ")
-            print(statistics.mean(self.precision))
-            print("Total recall: ")
-            print(statistics.mean(self.recall))
-            print("Total f_measure: ")
-            print(statistics.mean(self.f_measure))
-
-        return
 
     # Function to analyze the CQs from the CSV.
     # If the CSV has a column with API paths defined manually, this function allows applying the Rouge Method
@@ -456,8 +426,6 @@ class Analysis:
         while i < len(self.corpus_df):
             cq_text = self.corpus_df.iloc[i, 0]
             print("\nCQ: " + cq_text)
-           # apiPathFromCorpus = self.corpus_df.iloc[i, 1]
-           # print("API Path from corpus: " + str(apiPathFromCorpus))
             self.doc = self.nlp(cq_text)
             self.entities, self.relations, self.dataProperties = self.entity_relation_identification(self.doc)
             operation, target_resource = self.getOperations()
@@ -469,7 +437,6 @@ class Analysis:
                 print("OATAPI can't suggest an API path")
 
             results.append(apiPath)
-           # self.rougeTest(apiPath, apiPathFromCorpus, i)
 
             query = self.query_generator.generateQuery(target_resource, ontology_elements, relation, query_type)
             queries.append(query)
@@ -478,6 +445,7 @@ class Analysis:
             self.entities = []
             self.relations = []
             self.dataProperties = []
+        self.onto.destroy()
         return results, queries, self.onto.name
 
 
@@ -491,37 +459,41 @@ class Analysis:
         target_resource =""
         class_found = self.searchOntologyElements(owl_class, "label", element)
         if len(class_found) > 0:
-            #target_resource = element
             target_resource=self.getOntologyElementName(class_found[0]).lower()
             if len(target_resource.split()) > 1:  # if the name is composed by more than 1 word
                 target_resource = "-".join(target_resource.split())
             return target_resource
 
-        op_found = self.searchOntologyElements(owl_object_property, "label", element)
-        if len(op_found) > 0:
-            if not op_found[0].domain[0] == op_found[0].range[0]:
-                target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
-                return target_resource
-            else: # When the object property relates the same class (e.g. Player--> isFriendWithPlayer --> Player)
-                #target_resource = element
-                target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
-                return target_resource
-        else:
-            op_found = self.searchOntologyElements(owl_object_property, "iri", element)
+        try:
+            op_found = self.searchOntologyElements(owl_object_property, "label", element)
             if len(op_found) > 0:
-                target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
-                return target_resource
+                if not op_found[0].domain[0] == op_found[0].range[0]:
+                    target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
+                    return target_resource
+                else: # When the object property relates the same class (e.g. Player--> isFriendWithPlayer --> Player)
+                    target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
+                    return target_resource
+            else:
+                op_found = self.searchOntologyElements(owl_object_property, "iri", element)
+                if len(op_found) > 0:
+                    target_resource = self.getOntologyElementName(op_found[0].range[0]).lower()
+                    return target_resource
 
-        dp_found = self.searchOntologyElements(owl_object_property, "label", element)
-        if len(dp_found) > 0:
-            target_resource = self.getOntologyElementName(dp_found[0].domain[0]).lower()
-            return target_resource
-        else:
-            dp_found = self.searchOntologyElements(owl_object_property, "iri", element)
+            dp_found = self.searchOntologyElements(owl_object_property, "label", element)
             if len(dp_found) > 0:
                 target_resource = self.getOntologyElementName(dp_found[0].domain[0]).lower()
                 return target_resource
+            else:
+                dp_found = self.searchOntologyElements(owl_object_property, "iri", element)
+                if len(dp_found) > 0:
+                    target_resource = self.getOntologyElementName(dp_found[0].domain[0]).lower()
+                    return target_resource
+        except:
+            print ("Error, there is not range")
+
         return target_resource
+
+
 
     # Function to detect the operation that should be executed in the API
     def getOperations(self):

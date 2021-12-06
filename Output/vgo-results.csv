@@ -1,4 +1,4 @@
-CQ,API paths suggested by OATAPIs,queries
+CQ,API path suggested by OATAPI,queries
 What is the username of the player?,/players/{player-id},CONSTRUCT { ?player-id ?predicate ?object } WHERE { { SELECT DISTINCT ?player-id WHERE { ?player-id a <http://purl.org/net/VideoGameOntology#Player> } } ?player-id ?predicate ?object }
 Who are the friends of the player?,/players/{player-id}/players,CONSTRUCT { ?player ?predicate ?object } WHERE { { SELECT DISTINCT ?player WHERE { ?player-id <http://purl.org/net/VideoGameOntology#isFriendWithPlayer> ?player } } ?player ?predicate ?object }
 What achievements does a game have?,/games/{game-id}/achievements,CONSTRUCT { ?achievement ?predicate ?object } WHERE { { SELECT DISTINCT ?achievement WHERE { ?game-id <http://purl.org/net/VideoGameOntology#hasAchievement> ?achievement} } ?achievement ?predicate ?object }
