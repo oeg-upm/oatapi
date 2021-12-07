@@ -3,7 +3,7 @@ import pandas as pd
 import analysis
 
 def evaluate_CQs(sheet_name, onto_location):
-    corpus_df = pd.read_excel("Testbed/TestbedFromFieldResearchWork.xlsx", sheet_name=sheet_name, usecols=['CQ (en)'])
+    corpus_df = pd.read_excel("Indistinguishable/TestbedFromFieldResearchWork.xlsx", sheet_name=sheet_name, usecols=['CQ (en)'])
     onto = get_ontology(onto_location)
     print(corpus_df)
     analysis_method = analysis.Analysis(corpus_df, onto)  #load CQs and ontology for the analysis
@@ -22,7 +22,7 @@ corpus_df2 = evaluate_CQs('ZGZ-AirQuality',"http://vocab.linkeddata.es/datosabie
 corpus_df3 = evaluate_CQs('ZGZ-PublicProcurement',"http://contsem.unizar.es/def/sector-publico/pproc")
 
 # Write the results from each evaluation into an Excel file.
-with pd.ExcelWriter("Results/TestbedEvaluationResults.xlsx") as writer:
+with pd.ExcelWriter("Results/IndistinguishableEvaluationResults.xlsx") as writer:
     corpus_df1.to_excel(writer, sheet_name='OC-LocalBusiness')
     corpus_df2.to_excel(writer, sheet_name='ZGZ-AirQuality')
     corpus_df3.to_excel(writer, sheet_name='ZGZ-PublicProcurement')
