@@ -1,0 +1,49 @@
+paths:
+  /local-businesses/{local-business-id}/terraces:
+    get:
+      description: Gets a list of Terrace instances of a Local Business
+      parameters:
+      - description: The id of the Local Business
+        in: path
+        name: local-business-id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  \$ref: '#/components/schemas/Terrace'
+                type: array
+
+components:
+    schemas:
+        Terrace:
+          type: object
+          description: The use of a public or private land area affected by public use, to be used in catering activities, through the placement of tables, chairs, and umbrellas, as an extension zone of the activity that takes place within those premises. These facilities are usually temporary.
+          properties:
+          area:
+            type: float
+          number of chairs authorised:
+            type: integer
+          openingHours:
+            type: string
+          table number:
+            type: integer
+          operational time period:
+            items:
+                \$ref: '#/components/schemas/OperationalTimePeriod'
+            nullable: true
+            type: array
+          hasOpeningLicensing:
+            items:
+                \$ref: '#/components/schemas/OpeningLicense'
+            nullable: true
+            type: array
+          belongsTo:
+            items:
+                \$ref: '#/components/schemas/LocalBusiness'
+            nullable: true
+            type: array
