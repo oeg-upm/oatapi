@@ -1,3 +1,7 @@
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://github.com/oeg-upm/oatapi/blob/main/LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6637675.svg?style=flat)](https://doi.org/10.5281/zenodo.6637675)
+[![version](https://img.shields.io/badge/python-3.7+-green.svg)](https://www.python.org/downloads/release/python-370/)
+[![Generic badge](https://img.shields.io/badge/Status-Developing-yellow)](https://shields.io/)
 # Ontology Artefacts to Application Programming Interface (OATAPI)
 
 OATAPI takes two ontology artefacts (a set of competency questions (CQs) and the related ontology serialization) and generates the API paths and SPARQL queries that allow these questions  to be solved.
